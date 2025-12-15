@@ -1,6 +1,7 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
 
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -20,9 +21,30 @@ const pool = mysql.createPool({
 });
 
 //routes
+//root page
 app.get('/', (req, res) => {
-   res.send('Hello Express app!')
+    res.render('login');
 });
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.post('/login', (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+
+  console.log(username);
+   console.log(password);
+   res.render('login');
+
+});
+
+app.get("/signup", (req, res) => {
+  res.render('signup');
+});
+
+
+
 
 app.get("/dbTest", async(req, res) => {
    try {

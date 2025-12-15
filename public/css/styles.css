@@ -1,0 +1,154 @@
+.site-title {
+  font-size: 22px;
+  font-weight: 700;
+   color: #1e3a8a;           
+  margin: 0;
+  line-height: 1.25;
+
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.site-title .brand-accent {
+  color: #f97316;              
+  font-weight: 700;
+}
+body {
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #111827;
+}
+
+
+#loginBtn {
+  width: auto; 
+  padding: 10px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+#loginBtn:hover {
+  background-color: #1e40af;
+}
+
+#signupLink {
+  color: #2563eb;
+  text-decoration: none;
+}
+#welcomeTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px 0;
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+}
+
+#welcomeSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+label {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+}
+
+#signupText {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+#signupLink {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+#signupLink:hover {
+  text-decoration: underline;
+}
+#siteFooter {
+  margin-top: 48px;
+  padding-bottom: 16px;
+
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: #9ca3af; 
+
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+hr {
+  display: none;
+}
+
+#topSignup {
+  position: absolute;
+  top: 20px;
+  right: 32px;
+
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#topSignup:hover {
+  color: #2563eb;
+}
+
+#signupTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+#signupSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+#signupBtn {
+  padding: 8px 18px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+#signupBtn:hover {
+  background-color: #1e40af;
+}
+
+#backToLogin {
+  padding: 8px 14px;
+  background-color: #e5e7eb;
+  color: #111827;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+#topLogin {
+  position: absolute;
+  top: 20px;
+  right: 32px;
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+#topLogin:hover {
+  color: #2563eb;
+}
+
+

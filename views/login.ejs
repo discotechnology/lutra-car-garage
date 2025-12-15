@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %> <br>
+<body>
+
+   <a href="/signup" id="topSignup">Sign up</a>
+
+   <h2 id="welcomeTitle">Welcome back</h2>
+   <p id="welcomeSubtitle">Log in to view and manage your garage.</p>
+
+ <form method="POST" action="/login">
+  <label for="username">Username</label>
+  <input type="text" name="username" placeholder="your_username"  required>
+
+
+  <label for="password">Password</label>
+  <input type="password" name="password" placeholder="••••••••" required>
+  
+
+  <label id="rememberRow">
+      <input type="checkbox" name="remember">
+      Keep me logged in
+  </label> <br>
+
+ <button type="submit" id="loginBtn">Log in</button>
+  </form>
+
+   <p id="signupText">
+     Don't have an account?
+    <a href="/signup" id="signupLink">Create one</a>
+  </p>
+
+
+
+<%- include("partials/footer.ejs") %>
+</body>
+</html>
