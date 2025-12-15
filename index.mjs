@@ -1,5 +1,6 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
+import bcrypt from "bcrypt";
 
 
 const app = express();
@@ -42,6 +43,43 @@ app.post('/login', (req, res) => {
 app.get("/signup", (req, res) => {
   res.render('signup');
 });
+
+app.post("/signup", async (req, res) => {
+  try {
+    let username = req.body.username;
+    let email = req.body.email;
+    let password = req.body.password;
+
+
+    let sql = `SELECT * FROM user WHERE username = ?`;
+    let params = [username];
+
+    let [rows] = await pool.query(sql, params);
+
+    if (rows.length > 0) {
+      return res.send("Sorry, that username already exists!");
+    }
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+
+    let sql2 = `
+      INSERT INTO user (username, email, password)
+      VALUES (?, ?, ?)
+    `;
+    
+    await pool.query(sql2, [username, email, hashedPassword]);
+   
+    res.redirect('/login');
+    
+
+  } catch (err) {
+    console.error(err);
+    res.send("Server error");
+  }
+
+ 
+});
+
 
 
 
