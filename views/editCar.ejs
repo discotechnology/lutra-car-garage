@@ -4,15 +4,14 @@
   <body>
     <a href="/dashboard" id="backToDashboard">← Back to your garage</a>
 
-    <h2 id="addVehicleTitle">Add a vehicle</h2>
+    <h2 id="addVehicleTitle">Edit vehicle</h2>
 
-    <form method="POST" action="/vehicle/add" id="saveVehicleForm">
-      
+    <form method="POST" action="/vehicle/edit/<%= car.car_id %>" id="saveVehicleForm">
       <label for="year">Year</label>
       <select id="year" name="year" required>
         <option value="">Select year</option>
         <% years.forEach(function(y) { %>
-          <option value="<%= y %>"><%= y %></option>
+          <option value="<%= y %>" <%= String(y) === String(car.year) ? "selected" : "" %>><%= y %></option>
         <% }) %>
       </select>
 
@@ -28,29 +27,42 @@
 
       <label>Color</label>
       <div id="colorOptions">
+        <% const isPresetColor = carColors.includes(car.color); %>
         <% carColors.forEach(function(color) { %>
           <label class="colorOption">
-            <input type="radio" name="colorSelect" value="<%= color %>">
+            <input
+              type="radio"
+              name="colorSelect"
+              value="<%= color %>"
+              <%= car.color === color ? "checked" : "" %>
+            >
             <%= color %>
           </label>
         <% }) %>
 
         <label class="colorOption">
-          <input type="radio" name="colorSelect" value="other" id="colorOtherRadio">
+          <input
+            type="radio"
+            name="colorSelect"
+            value="other"
+            id="colorOtherRadio"
+            <%= !isPresetColor ? "checked" : "" %>
+          >
           Other
         </label>
 
-        <input 
-          type="text" 
-          id="colorOtherInput" 
+        <input
+          type="text"
+          id="colorOtherInput"
           name="colorOther"
           placeholder="Enter custom color"
-          style="display:none; margin-top:5px;"
+          value="<%= !isPresetColor ? car.color : "" %>"
+          style="<%= !isPresetColor ? "margin-top:5px;" : "display:none; margin-top:5px;" %>"
         />
       </div>
 
       <br>
-      <button type="submit">Save to my garage</button>
+      <button type="submit">Save changes</button>
     </form>
 
     <script>
@@ -60,6 +72,7 @@
       const colorOtherRadio = document.getElementById('colorOtherRadio');
       const colorOtherInput = document.getElementById('colorOtherInput');
       const colorRadios = document.querySelectorAll('input[name="colorSelect"]');
+      const existingCar = <%- JSON.stringify(car) %>;
 
       colorRadios.forEach(radio => {
         radio.addEventListener("change", () => {
@@ -90,9 +103,17 @@
           opt.textContent = item.MakeName;
           makeSelect.appendChild(opt);
         });
+
+        if (existingCar.make) {
+          makeSelect.value = existingCar.make;
+        }
+
+        if (existingCar.year && existingCar.make) {
+          loadModels(existingCar.make, existingCar.year, true);
+        }
       }
 
-      async function loadModels(make, year) {
+      async function loadModels(make, year, selectExisting) {
         const res = await fetch(
           `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${encodeURIComponent(year)}?format=json`
         );
@@ -108,19 +129,23 @@
           opt.textContent = item.Model_Name;
           modelSelect.appendChild(opt);
         });
+
+        if (selectExisting && existingCar.model) {
+          modelSelect.value = existingCar.model;
+        }
       }
 
       loadMakes();
 
       yearSelect.addEventListener("change", () => {
         if (yearSelect.value && makeSelect.value) {
-          loadModels(makeSelect.value, yearSelect.value);
+          loadModels(makeSelect.value, yearSelect.value, false);
         }
       });
 
       makeSelect.addEventListener("change", () => {
         if (yearSelect.value && makeSelect.value) {
-          loadModels(makeSelect.value, yearSelect.value);
+          loadModels(makeSelect.value, yearSelect.value, false);
         }
       });
     </script>
