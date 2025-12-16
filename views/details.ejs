@@ -43,8 +43,8 @@
                 <div class="modal-body">
                     <form id="editDetailsForm" method="POST" action="/api/car/edit">
                         <input type="hidden" name="car_id" value="<%=car[0].car_id%>">
-                        Make: <input type="text" name="make" value="<%=car[0].make%>"><br>
-                        Model: <input type="text" name="model" value="<%=car[0].model%>"><br>
+                        Make: <input id="makeSelect" type="text" name="make" value="<%=car[0].make%>"><br>
+                        Model: <select id="modelSelect" name="model" value="<%=car[0].model%>"></select><br>
                         Year: <input type="number" name="year" value="<%=car[0].year%>"><br>
                         Color: <input type="text" name="color" value="<%=car[0].color%>"><br>
                         <button type="submit" class="btn btn-primary">Save Changes</button>

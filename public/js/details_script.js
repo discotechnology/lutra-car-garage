@@ -8,11 +8,39 @@ document.querySelectorAll('.deleteRepairBtn').forEach(button => {
     })
 });
 
-
 // Functions
 async function detailsModal() {
     var myModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    displayModelOptions();
+    document.querySelector('#makeSelect').addEventListener('change', displayModelOptions);
+
     myModal.show();
+}
+
+async function displayModelOptions() {
+    let make = document.querySelector('#makeSelect').value.toLowerCase();
+    let modelOptions = document.querySelector('#modelSelect');
+    let currentModel = modelOptions.attributes.value.value;
+    modelOptions.innerHTML = `<option value="">Select Model:</option>`;
+
+    let data = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make}?format=json`);
+    let results = await data.json();
+    let models = [];
+
+    for(i in results.Results) {
+        models.push(results.Results[i].Model_Name);
+    }
+
+    models.sort();
+
+    for (i in models) {
+        let modelName = models[i];
+        if (modelName == currentModel) {
+            modelOptions.innerHTML += `<option value="${modelName}" selected>${modelName}</option>`;
+        } else {
+        modelOptions.innerHTML += `<option value="${modelName}">${modelName}</option>`;
+        }
+    }
 }
 
 async function addRepairModal() {
