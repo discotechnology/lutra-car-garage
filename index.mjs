@@ -156,6 +156,12 @@ app.get('/logout', (req, res) => {
   res.redirect('/'); //redirect to login page
 });
 
+app.get('/vehicle/add', async (req, res) => {
+    let makesRes = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json');
+    let makesData = await makesRes.json();
+
+    res.render('addCar', { "makes": makesData });
+});
 
 app.get("/dbTest", async(req, res) => {
    try {
