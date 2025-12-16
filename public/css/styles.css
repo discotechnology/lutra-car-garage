@@ -167,12 +167,14 @@ hr {
 }
 
 #backToLogin {
-  padding: 8px 14px;
+  padding: 10px 22px;   
   background-color: #e5e7eb;
   color: #111827;
   border-radius: 9999px;
   text-decoration: none;
   font-size: 14px;
+  font-weight: 600;       
+  display: inline-block;
 }
 
 #topLogin {
