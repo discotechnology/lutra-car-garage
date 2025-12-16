@@ -1,0 +1,23 @@
+<h2>Welcome, <%= username %></h2>
+
+<h3>Your Garage</h3>
+
+<% if (cars.length === 0) { %>
+  <p>You haven’t added any cars yet.</p>
+<% } else { %>
+  <ul>
+    <% cars.forEach(car => { %>
+      <li>
+        <strong><%= car.year %> <%= car.make %> <%= car.model %></strong>
+        <% if (car.color) { %>
+          — <%= car.color %>
+        <% } %>
+        <a href="/vehicle/edit/<%= car.car_id %>">Edit</a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<br>
+<a href="/vehicle/add">Add a Vehicle</a> |
+<a href="/logout">Log out</a>

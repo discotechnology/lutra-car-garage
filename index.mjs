@@ -123,9 +123,31 @@ app.post("/signup", async (req, res) => {
  
 });
 
-app.get('/dashboard', isAuthenticated, (req, res) => {
-    res.send("Dashboard placeholder. User ID = " + req.session.userId);
- 
+app.get('/dashboard', isAuthenticated, async (req, res) => {
+  try {
+
+    const [userRows] = await pool.query(
+      "SELECT username FROM user WHERE user_id = ?",
+      [req.session.userId]
+    );
+
+    const [cars] = await pool.query(
+      `SELECT car_id, year, make, model, color
+       FROM car
+       WHERE user_id = ?
+       ORDER BY car_id DESC`,
+      [req.session.userId]
+    );
+
+    res.render('dashboard', {
+      username: userRows[0].username,
+      cars
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.send("Server error");
+  }
 });
 
 
@@ -133,8 +155,6 @@ app.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/'); //redirect to login page
 });
-
-
 
 
 app.get("/dbTest", async(req, res) => {
