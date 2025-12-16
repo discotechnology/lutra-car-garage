@@ -79,8 +79,6 @@ app.post('/login', async (req, res) => {
     res.send("Server error");
   }
 
-
-
 });
 
 app.get("/signup", (req, res) => {
@@ -119,9 +117,20 @@ app.post("/signup", async (req, res) => {
     console.error(err);
     res.send("Server error");
   }
-
  
 });
+
+app.get('/details', async(req, res) => {
+    let car = req.query.car_id;
+
+    let sql = `SELECT * FROM car WHERE car_id = ?`;
+    let params = [car];
+
+    let [rows] = await pool.query(sql, params);
+    res.render('details', {car: rows});
+});
+
+
 
 app.get('/dashboard', isAuthenticated, (req, res) => {
     res.send("Dashboard placeholder. User ID = " + req.session.userId);

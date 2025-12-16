@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %> <br>
+<body>
+
+    <h2 id="detailTitle">Car Details</h2>
+    
+    <div id="carDetails">
+         <p><strong>Make:</strong> <%= car[0].make %></p>
+         <p><strong>Model:</strong> <%= car[0].model %></p>
+         <p><strong>Year:</strong> <%= car[0].year %></p>
+         <p><strong>Color:</strong> <%= car[0].color %></p>
+    </div>
+
+    
+
+
+<%- include("partials/footer.ejs") %>
+</body>
+</html>
