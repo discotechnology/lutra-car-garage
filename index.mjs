@@ -139,8 +139,7 @@ app.get('/logout', (req, res) => {
 
 app.get("/dbTest", async(req, res) => {
    try {
-        const [rows] = await pool.query(
-            "SELECT * FROM q_authors");
+        const [rows] = await pool.query("SELECT CURDATE()");
         res.send(rows);
     } catch (err) {
         console.error("Database error:", err);
