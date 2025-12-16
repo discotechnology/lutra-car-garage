@@ -150,6 +150,17 @@ app.get('/dashboard', isAuthenticated, async (req, res) => {
   }
 });
 
+app.get("/debug/user/420/cars", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT car_id, year, make, model, color FROM car WHERE user_id = 420"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.send("DB error");
+  }
+});
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
