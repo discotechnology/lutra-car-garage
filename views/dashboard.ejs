@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/head') %>
+
+ <body class="bg-light">
+    <div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Welcome, <%= username %></h2>
+        <a href="/logout" class="btn btn-outline-secondary btn-sm">Log out</a>
+    </div>
+
+    <h4 class="mb-3">Your Garage</h4>
+
+    <% if (cars.length === 0) { %>
+        <p class="text-muted">You haven’t added any vehicles yet.</p>
+        <a href="/vehicle/add" class="btn btn-primary">Add a Vehicle</a>
+    <% } else { %>
+
+        <div class="row g-4">
+        <% cars.forEach(car => { %>
+            <div class="col-md-6 col-lg-4">
+            
+            <div class="card car-card h-100">
+                <div class="card-body">
+
+                <h5 class="card-title">
+                    <%= car.year %> <%= car.make %>
+                </h5>
+
+                <p class="card-text mb-1">
+                    <strong>Model:</strong> <%= car.model %>
+                </p>
+
+                <p class="card-text mb-2">
+                    <strong>Color:</strong> <%= car.color %>
+                </p>
+
+                <div class="d-flex gap-2">
+                    <a href="/vehicle/edit/<%= car.car_id %>" class="btn btn-outline-primary btn-sm">
+                    Edit
+                    </a>
+                </div>
+
+                </div>
+            </div>
+            </div>
+        <% }) %>
+        </div>
+
+        <div class="mt-4">
+        <a href="/vehicle/add" class="btn btn-primary">Add a Vehicle</a>
+        </div>
+
+    <% } %>
+
+    </div>
+    </body>
+</html>
