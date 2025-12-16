@@ -23,6 +23,7 @@
                     <p><strong>Mileage:</strong> <%= repairs[i].mileage %></p>
                     <p><strong>Cateogry:</strong> <%= repairs[i].category %></p>
                     <p><strong>Description:</strong> <%= repairs[i].description %></p>
+                    <button class="deleteRepairBtn" class="btn btn-warning" value="<%=repairs[i].repair_id%>">Remove</button>
                 </div>
                 <br>
         <% } } else { %>
@@ -77,6 +78,28 @@
                         Mileage: <input type="number" name="mileage"><br>
                         Description: <textarea name="description"></textarea><br>
                         <button type="submit" class="btn btn-primary">Add Repair</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Repair -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this repair record?</p>
+                    <form id="deleteRepairForm" method="POST" action="/api/repair/delete">
+                        <input type="hidden" name="car_id" value="<%=car[0].car_id%>">
+                        <button type="submit" class="btn btn-warning">Delete Repair</button>
                     </form>
                 </div>
                 <div class="modal-footer">

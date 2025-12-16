@@ -142,7 +142,9 @@ app.get('/details', async(req, res) => {
     let params = [car_id];
     let [car] = await pool.query(car_query, params);
 
-    let repairs_query = `SELECT * FROM repairs WHERE car_id = ?`;
+    let repairs_query = `SELECT * FROM repairs 
+                        WHERE car_id = ?
+                        ORDER BY date DESC`;
     let [repairs] = await pool.query(repairs_query, params);
     res.render('details', {car: car, repairs: repairs, categories: REPAIR_CATEGORIES});
 });
@@ -205,6 +207,8 @@ app.get('/logout', (req, res) => {
   app.post('/api/repair/delete', async function(req, res) {
       let car_id = req.body.car_id;
       let repair_id = req.body.repair_id;
+
+      console.log("Repair ID in API call:", repair_id)
 
       let delete_query = `DELETE FROM repairs WHERE repair_id = ?`;
       let params = [repair_id];
