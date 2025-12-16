@@ -15,6 +15,7 @@
     <br><br>
     <div id="repairDetails">
         <h3>Repair Details</h3>
+        <button id="addRepair" class="btn btn-primary">Add a Repair</button><br>
         <% if (repairs.length > 0) { %>
             <% for (i in repairs) { %>
                 <div class="repair-item">
@@ -46,6 +47,36 @@
                         Year: <input type="number" name="year" value="<%=car[0].year%>"><br>
                         Color: <input type="text" name="color" value="<%=car[0].color%>"><br>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Repair -->
+    <div class="modal fade" id="addRepairModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add A Repair</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRepairForm" method="POST" action="/api/repair/add">
+                        <input type="hidden" name="car_id" value="<%=car[0].car_id%>">
+                        Date <input type="date" name="date"><br>
+                        Category: 
+                        <select name="category">
+                            <% for (i in categories) { %>
+                                <option value="<%=categories[i]%>"><%=categories[i]%></option>
+                            <% } %>
+                        </select><br>
+                        Mileage: <input type="number" name="mileage"><br>
+                        Description: <textarea name="description"></textarea><br>
+                        <button type="submit" class="btn btn-primary">Add Repair</button>
                     </form>
                 </div>
                 <div class="modal-footer">
