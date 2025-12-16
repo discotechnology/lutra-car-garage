@@ -1,7 +1,7 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
 import bcrypt from "bcrypt";
-
+import session from 'express-session';
 
 const app = express();
 
@@ -21,6 +21,21 @@ const pool = mysql.createPool({
     waitForConnections: true
 });
 
+app.set('trust proxy', 1); 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}))
+
+function isAuthenticated(req, res, next) {
+  if (!req.session.authenticated) {
+    return res.redirect("/login");
+  }
+  next();
+}
+
+
 //routes
 //root page
 app.get('/', (req, res) => {
@@ -30,13 +45,41 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-app.post('/login', (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
+app.post('/login', async (req, res) => {
+    try{
+       let username = req.body.username;
+       let password = req.body.password;
 
-  console.log(username);
-   console.log(password);
-   res.render('login');
+       let sql = `SELECT * FROM user WHERE username = ?`;
+       let params = [username];
+    
+       let [rows] = await pool.query(sql, params);
+
+      if (rows.length === 0) {
+      return res.send("Incorrect username or password.");
+      }
+
+      let storedHashedPassword = rows[0].password;
+
+      let passwordMatch = await bcrypt.compare(password, storedHashedPassword);
+
+      if (!passwordMatch) {
+      return res.send("Incorrect username or password.");
+    }
+
+    req.session.authenticated = true;
+    req.session.userId = rows[0].user_id;
+
+    res.redirect('/dashboard'); //feel free to rename this route 
+
+
+
+    } catch (err) {
+    console.error(err);
+    res.send("Server error");
+  }
+
+
 
 });
 
@@ -66,7 +109,7 @@ app.post("/signup", async (req, res) => {
       INSERT INTO user (username, email, password)
       VALUES (?, ?, ?)
     `;
-    
+
     await pool.query(sql2, [username, email, hashedPassword]);
    
     res.redirect('/login');
@@ -80,6 +123,16 @@ app.post("/signup", async (req, res) => {
  
 });
 
+app.get('/dashboard', isAuthenticated, (req, res) => {
+    res.send("Dashboard placeholder. User ID = " + req.session.userId);
+ 
+});
+
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/'); //redirect to login page
+});
 
 
 
