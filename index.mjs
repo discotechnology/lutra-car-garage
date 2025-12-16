@@ -79,8 +79,6 @@ app.post('/login', async (req, res) => {
     res.send("Server error");
   }
 
-
-
 });
 
 app.get("/signup", (req, res) => {
@@ -119,8 +117,36 @@ app.post("/signup", async (req, res) => {
     console.error(err);
     res.send("Server error");
   }
-
  
+});
+
+app.get('/details', async(req, res) => {
+    let car_id = req.query.car_id;
+    const REPAIR_CATEGORIES = [
+      "Engine",
+      "Transmission",
+      "Brakes",
+      "Suspension",
+      "Steering",
+      "Electrical",
+      "HVAC",
+      "Tires",
+      "Fluids / Filters",
+      "Body / Exterior",
+      "Interior",
+      "Scheduled Maintenance",
+      "Other"
+    ];
+
+    let car_query = `SELECT * FROM car WHERE car_id = ?`;
+    let params = [car_id];
+    let [car] = await pool.query(car_query, params);
+
+    let repairs_query = `SELECT * FROM repairs 
+                        WHERE car_id = ?
+                        ORDER BY date DESC`;
+    let [repairs] = await pool.query(repairs_query, params);
+    res.render('details', {car: car, repairs: repairs, categories: REPAIR_CATEGORIES});
 });
 
 app.get('/dashboard', isAuthenticated, async (req, res) => {
@@ -166,6 +192,61 @@ app.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/'); //redirect to login page
 });
+
+//API Endpoints
+
+  //Get car details by car_id
+  app.get('/api/car/details', async(req, res) => {
+      let car_id = req.query.car_id;
+      let car_query = `SELECT * FROM car WHERE car_id = ?`;
+      let params = [car_id];
+      let [car] = await pool.query(car_query, params);
+      res.send(car);
+  });
+
+  //Edit car details
+  app.post('/api/car/edit', async function(req, res) {
+      let car_id = req.body.car_id;
+      let make = req.body.make;
+      let model = req.body.model;
+      let year = req.body.year;
+      let color = req.body.color;
+
+      let update_query = `UPDATE car 
+                          SET make = ?, model = ?, year = ?, color = ?
+                          WHERE car_id = ?`;
+      let params = [make, model, year, color, car_id];
+      await pool.query(update_query, params);
+      res.redirect('/details?car_id=' + car_id);
+  });
+
+  //Add repair record
+  app.post('/api/repair/add', async function(req, res) {
+      let car_id = req.body.car_id;
+      let description = req.body.description;
+      let category = req.body.category;
+      let date = req.body.date;
+      let mileage = req.body.mileage;
+
+      let insert_query = `INSERT INTO repairs (car_id, description, category, date, mileage)
+                          VALUES (?, ?, ?, ?, ?)`;
+      let params = [car_id, description, category, date, mileage];
+      await pool.query(insert_query, params);
+      res.redirect('/details?car_id=' + car_id);
+  });
+
+  //Delete repair record
+  app.post('/api/repair/delete', async function(req, res) {
+      let car_id = req.body.car_id;
+      let repair_id = req.body.repair_id;
+
+      console.log("Repair ID in API call:", repair_id)
+
+      let delete_query = `DELETE FROM repairs WHERE repair_id = ?`;
+      let params = [repair_id];
+      await pool.query(delete_query, params);
+      res.redirect('/details?car_id=' + car_id);
+  });
 
 
 app.get("/dbTest", async(req, res) => {
