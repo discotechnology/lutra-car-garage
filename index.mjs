@@ -121,15 +121,44 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get('/details', async(req, res) => {
-    let car = req.query.car_id;
+    let car_id = req.query.car_id;
 
-    let sql = `SELECT * FROM car WHERE car_id = ?`;
-    let params = [car];
+    let car_query = `SELECT * FROM car WHERE car_id = ?`;
+    let params = [car_id];
+    let [car] = await pool.query(car_query, params);
 
-    let [rows] = await pool.query(sql, params);
-    res.render('details', {car: rows});
+    let repairs_query = `SELECT * FROM repairs WHERE car_id = ?`;
+    let [repairs] = await pool.query(repairs_query, params);
+    res.render('details', {car: car, repairs: repairs});
 });
 
+
+//API Endpoints
+
+//Get car details by car_id
+app.get('/api/car/details', async(req, res) => {
+    let car_id = req.query.car_id;
+    let car_query = `SELECT * FROM car WHERE car_id = ?`;
+    let params = [car_id];
+    let [car] = await pool.query(car_query, params);
+    res.send(car);
+});
+
+//Edit car details
+app.post('/api/car/edit', async function(req, res) {
+    let car_id = req.body.car_id;
+    let make = req.body.make;
+    let model = req.body.model;
+    let year = req.body.year;
+    let color = req.body.color;
+
+    let update_query = `UPDATE car 
+                        SET make = ?, model = ?, year = ?, color = ?
+                        WHERE car_id = ?`;
+    let params = [make, model, year, color, car_id];
+    await pool.query(update_query, params);
+    res.redirect('/details?car_id=' + car_id);
+});
 
 
 app.get('/dashboard', isAuthenticated, (req, res) => {

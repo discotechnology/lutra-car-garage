@@ -10,11 +10,52 @@
          <p><strong>Model:</strong> <%= car[0].model %></p>
          <p><strong>Year:</strong> <%= car[0].year %></p>
          <p><strong>Color:</strong> <%= car[0].color %></p>
+         <button id="editDetails" class="btn btn-primary">Edit Details</button>
+    </div>
+    <br><br>
+    <div id="repairDetails">
+        <h3>Repair Details</h3>
+        <% if (repairs.length > 0) { %>
+            <% for (i in repairs) { %>
+                <div class="repair-item">
+                    <p><strong>Date:</strong> <%= repairs[i].date %></p>
+                    <p><strong>Mileage:</strong> <%= repairs[i].mileage %></p>
+                    <p><strong>Cateogry:</strong> <%= repairs[i].category %></p>
+                    <p><strong>Description:</strong> <%= repairs[i].description %></p>
+                </div>
+                <br>
+        <% } } else { %>
+            <p>No repair records found for this car.</p>
+        <% } %>
     </div>
 
-    
+    <!-- Modals -->
+    <!-- Edit Car -->
+     <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Car Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDetailsForm" method="POST" action="/api/car/edit">
+                        <input type="hidden" name="car_id" value="<%=car[0].car_id%>">
+                        Make: <input type="text" name="make" value="<%=car[0].make%>"><br>
+                        Model: <input type="text" name="model" value="<%=car[0].model%>"><br>
+                        Year: <input type="number" name="year" value="<%=car[0].year%>"><br>
+                        Color: <input type="text" name="color" value="<%=car[0].color%>"><br>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
+<script src="/js/details_script.js"></script>
 <%- include("partials/footer.ejs") %>
 </body>
 </html>
