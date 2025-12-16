@@ -13,7 +13,7 @@
     <h4 class="mb-3">Your Garage</h4>
 
     <% if (cars.length === 0) { %>
-        <p class="text-muted">You haven’t added any vehicles yet.</p>
+        <p class="text-muted">You have not added any vehicles yet.</p>
         <a href="/vehicle/add" class="btn btn-primary">Add a Vehicle</a>
     <% } else { %>
 
@@ -55,5 +55,6 @@
     <% } %>
 
     </div>
+      <%- include("partials/footer.ejs") %>
     </body>
 </html>

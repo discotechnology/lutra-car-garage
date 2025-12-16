@@ -70,7 +70,7 @@ app.post('/login', async (req, res) => {
     req.session.authenticated = true;
     req.session.userId = rows[0].user_id;
 
-    res.redirect('/dashboard'); //feel free to rename this route 
+    res.redirect('/dashboard'); 
 
 
 

@@ -11,11 +11,15 @@
 .site-title .brand-accent {
   color: #f97316;              
   font-weight: 700;
+  font-size: 25px;
 }
 body {
   font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #111827;
+  font-size: 15px;
+ 
 }
+
 
 
 #loginBtn {
