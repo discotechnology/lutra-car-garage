@@ -271,6 +271,24 @@ app.post('/vehicle/edit/:carId', async (req, res) => {
     }
 });
 
+app.post('/vehicle/delete/:carId', async (req, res) => {
+  try {
+    const carId = req.params.carId;
+    const userId = req.session.userId;
+
+    await pool.query(
+      `DELETE FROM car
+       WHERE car_id = ? AND user_id = ?`,
+      [carId, userId]
+    );
+
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error("Error deleting car:", err);
+    res.status(500).send("Error deleting car");
+  }
+});
+
 app.get("/dbTest", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT CURDATE()");
