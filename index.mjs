@@ -211,11 +211,13 @@ app.get('/logout', (req, res) => {
       let model = req.body.model;
       let year = req.body.year;
       let color = req.body.color;
+      let pur_date = req.body.pur_date;
+      let plate_no = req.body.plate_no;
 
       let update_query = `UPDATE car 
-                          SET make = ?, model = ?, year = ?, color = ?
+                          SET make = ?, model = ?, year = ?, color = ?, pur_date = ?, plate_no = ?
                           WHERE car_id = ?`;
-      let params = [make, model, year, color, car_id];
+      let params = [make, model, year, color, pur_date, plate_no, car_id];
       await pool.query(update_query, params);
       res.redirect('/details?car_id=' + car_id);
   });
@@ -227,10 +229,11 @@ app.get('/logout', (req, res) => {
       let category = req.body.category;
       let date = req.body.date;
       let mileage = req.body.mileage;
+      let shop = req.body.shop;
 
-      let insert_query = `INSERT INTO repairs (car_id, description, category, date, mileage)
-                          VALUES (?, ?, ?, ?, ?)`;
-      let params = [car_id, description, category, date, mileage];
+      let insert_query = `INSERT INTO repairs (car_id, description, category, date, mileage, shop)
+                          VALUES (?, ?, ?, ?, ?, ?)`;
+      let params = [car_id, description, category, date, mileage, shop];
       await pool.query(insert_query, params);
       res.redirect('/details?car_id=' + car_id);
   });
@@ -239,8 +242,6 @@ app.get('/logout', (req, res) => {
   app.post('/api/repair/delete', async function(req, res) {
       let car_id = req.body.car_id;
       let repair_id = req.body.repair_id;
-
-      console.log("Repair ID in API call:", repair_id)
 
       let delete_query = `DELETE FROM repairs WHERE repair_id = ?`;
       let params = [repair_id];

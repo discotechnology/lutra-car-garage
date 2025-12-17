@@ -2,55 +2,69 @@
 <html lang="en">
 <%- include('partials/head') %> <br>
 
-    <body>
+    <body class="bg-light">
+        <div id="details-wrapper">
 
-        <h2 id="detailTitle">Car Details</h2>
+            <div id="carDetails">
+                <h2 id="detailTitle">Car Details</h2>
+                <br>
+                <p><strong>Make:</strong>
+                    <%= car[0].make %>
+                </p>
+                <p><strong>Model:</strong>
+                    <%= car[0].model %>
+                </p>
+                <p><strong>Year:</strong>
+                    <%= car[0].year %>
+                </p>
+                <p><strong>Color:</strong>
+                    <%= car[0].color %>
+                </p>
+                <p><strong>Purchase Date:</strong>
+                    <% if (car[0].pur_date == null) { %>
+                        No purchase date entered.
+                    <% } else { %>
+                        <%= car[0].pur_date.toString().substring(4,15) %>
+                    <% } %>
+                </p>
+                <p><strong>License Plate No.:</strong>
+                    <%= car[0].plate_no %>
+                </p>
 
-        <div id="carDetails">
-            <p><strong>Make:</strong>
-                <%= car[0].make %>
-            </p>
-            <p><strong>Model:</strong>
-                <%= car[0].model %>
-            </p>
-            <p><strong>Year:</strong>
-                <%= car[0].year %>
-            </p>
-            <p><strong>Color:</strong>
-                <%= car[0].color %>
-            </p>
-            <button id="editDetails" class="btn btn-primary">Edit Details</button>
-            <form action="/vehicle/delete/<%= car.car_id %>/" method="POST"
-                onsubmit="return confirm('Delete this vehicle?');">
-                <button class="btn btn-danger" type="submit">Delete</button>
-            </form>
-        </div>
-        <br><br>
-        <div id="repairDetails">
-            <h3>Repair Details</h3>
-            <button id="addRepair" class="btn btn-primary">Add a Repair</button><br>
-            <% if (repairs.length> 0) { %>
-                <% for (i in repairs) { %>
-                    <div class="repair-item">
-                        <p><strong>Date:</strong>
-                            <%= repairs[i].date %>
-                        </p>
-                        <p><strong>Mileage:</strong>
-                            <%= repairs[i].mileage %>
-                        </p>
-                        <p><strong>Cateogry:</strong>
-                            <%= repairs[i].category %>
-                        </p>
-                        <p><strong>Description:</strong>
-                            <%= repairs[i].description %>
-                        </p>
-                        <button class="deleteRepairBtn" class="btn btn-warning"
-                            value="<%=repairs[i].repair_id%>">Remove</button>
-                    </div>
-                    <br>
-                    <% } } else { %>
-                        <p>No repair records found for this car.</p>
-                        <% } %>
+                <button id="editDetails" class="btn btn-outline-secondary btn-sm">Edit Details</button>
+            </div>
+            <br><br>
+            <div id="repairDetails">
+                <div>
+                    <h3>Repair Details</h3>
+                    <button id="addRepair" class="btn btn-primary">Add a Repair</button><br>
+                </div>
+                <% if (repairs.length> 0) { %>
+                    <% for (i in repairs) { %>
+                        <div class="repair-item">
+                            <p><strong>Date:</strong>
+                                <%= repairs[i].date.toString().substring(4,15) %>
+                            </p>
+                            <p><strong>Repair Shop:</strong>
+                                <%= repairs[i].shop %>
+                            </p>
+                            <p><strong>Mileage:</strong>
+                                <%= repairs[i].mileage %>
+                            </p>
+                            <p><strong>Category:</strong>
+                                <%= repairs[i].category %>
+                            </p>
+                            <p><strong>Description:</strong>
+                                <%= repairs[i].description %>
+                            </p>
+                            <button class="deleteRepairBtn btn btn-outline-danger btn-sm"
+                                value="<%=repairs[i].repair_id%>">Remove</button>
+                        </div>
+                        <br>
+                        <% } } else { %>
+                            <p>No repair records found for this car.</p>
+                            <% } %>
+            </div>
         </div>
 
         <!-- Modals -->
@@ -69,6 +83,9 @@
                             Model: <select id="modelSelect" name="model" value="<%=car[0].model%>"></select><br>
                             Year: <input type="number" name="year" value="<%=car[0].year%>"><br>
                             Color: <input type="text" name="color" value="<%=car[0].color%>"><br>
+                            Purchase Date: <input type="date" name="pur_date"
+                                value="<%=car[0].pur_date.toISOString().substring(0,10)%>"><br>
+                            License Plate No.: <input type="text" name="plate_no" value="<%=car[0].plate_no%>"><br>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </form>
                     </div>
@@ -92,6 +109,7 @@
                         <form id="addRepairForm" method="POST" action="/api/repair/add">
                             <input type="hidden" name="car_id" value="<%=car[0].car_id%>">
                             Date <input type="date" name="date"><br>
+                            Repair Shop: <input type="text" name="shop"><br>
                             Category:
                             <select name="category">
                                 <% for (i in categories) { %>
@@ -101,7 +119,8 @@
                                     <% } %>
                             </select><br>
                             Mileage: <input type="number" name="mileage"><br>
-                            Description: <textarea name="description"></textarea><br>
+                            Description: <br>
+                            <textarea name="description" rows="4" cols="40"></textarea><br>
                             <button type="submit" class="btn btn-primary">Add Repair</button>
                         </form>
                     </div>

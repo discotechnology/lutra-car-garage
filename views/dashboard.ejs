@@ -40,8 +40,12 @@
                     <a  href="/details?car_id=<%= car.car_id %>" class="btn btn-outline-secondary btn-sm">
                     View Details
                     </a>
-
                 </div>
+
+                <form action="/vehicle/delete/<%= car.car_id %>/" method="POST"
+                    onsubmit="return confirm('Delete this vehicle?');">
+                    <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+                </form>
 
                 </div>
             </div>
