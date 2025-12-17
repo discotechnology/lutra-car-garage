@@ -16,6 +16,9 @@
   <label for="password">Password</label>
   <input type="password" name="password" placeholder="••••••••" required>
   
+ <% if (typeof error !== "undefined") { %>
+  <p id="loginError"><%= error %></p>
+<% } %>
 
   <label id="rememberRow">
       <input type="checkbox" name="remember">

@@ -21,6 +21,9 @@
     <label for="confirmPassword">Confirm password</label>
     <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat your password" required> 
 
+ <% if (typeof error !== "undefined") { %>
+  <p id="signupError"><%= error %></p>
+<% } %>
   
     <br> <br>
     <button type="submit" id="signupBtn">Sign up</button>

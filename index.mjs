@@ -9,7 +9,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 //for Express to get values using POST method
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
 //setting up database connection pool
 const pool = mysql.createPool({
@@ -21,18 +21,18 @@ const pool = mysql.createPool({
     waitForConnections: true
 });
 
-app.set('trust proxy', 1); 
+app.set('trust proxy', 1);
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
 }))
 
 function isAuthenticated(req, res, next) {
-  if (!req.session.authenticated) {
-    return res.redirect("/login");
-  }
-  next();
+    if (!req.session.authenticated) {
+        return res.redirect("/login");
+    }
+    next();
 }
 
 
@@ -42,81 +42,89 @@ app.get('/', (req, res) => {
     res.render('login');
 });
 app.get('/login', (req, res) => {
-  res.render('login');
+    res.render('login');
 });
 
 app.post('/login', async (req, res) => {
-    try{
-       let username = req.body.username;
-       let password = req.body.password;
+    try {
+        let username = req.body.username;
+        let password = req.body.password;
 
-       let sql = `SELECT * FROM user WHERE username = ?`;
-       let params = [username];
-    
-       let [rows] = await pool.query(sql, params);
+        let sql = `SELECT * FROM user WHERE username = ?`;
+        let params = [username];
 
-      if (rows.length === 0) {
-      return res.send("Incorrect username or password.");
-      }
+        let [rows] = await pool.query(sql, params);
 
-      let storedHashedPassword = rows[0].password;
+        if (rows.length === 0) {
+            return res.render("login", {
+           error: "Incorrect username or password"
+           });
+        }
 
-      let passwordMatch = await bcrypt.compare(password, storedHashedPassword);
+        let storedHashedPassword = rows[0].password;
 
-      if (!passwordMatch) {
-      return res.send("Incorrect username or password.");
-    }
+        let passwordMatch = await bcrypt.compare(password, storedHashedPassword);
+
+        if (!passwordMatch) {
+          return res.render("login", {
+           error: "Incorrect username or password"
+           });
+        }
 
     req.session.authenticated = true;
-    req.session.userId = rows[0].user_id;
+    req.session.userId = rows[0].user_id;    
 
     res.redirect('/dashboard'); 
 
 
 
     } catch (err) {
-    console.error(err);
-    res.send("Server error");
-  }
+        console.error(err);
+        res.send("Server error");
+    }
 
 });
 
 app.get("/signup", (req, res) => {
-  res.render('signup');
+    res.render('signup');
 });
 
 app.post("/signup", async (req, res) => {
-  try {
-    let username = req.body.username;
-    let email = req.body.email;
-    let password = req.body.password;
+    try {
+        let username = req.body.username;
+        let email = req.body.email;
+        let password = req.body.password;
 
 
-    let sql = `SELECT * FROM user WHERE username = ?`;
-    let params = [username];
+        let sql = `SELECT * FROM user WHERE username = ?`;
+        let params = [username];
 
-    let [rows] = await pool.query(sql, params);
+        let [rows] = await pool.query(sql, params);
 
-    if (rows.length > 0) {
-      return res.send("Sorry, that username already exists!");
-    }
+        if (rows.length > 0) {
+             return res.render("signup", {
+            error: "Username already exists"
+            });
+        }
 
-    let hashedPassword = await bcrypt.hash(password, 10);
+        let hashedPassword = await bcrypt.hash(password, 10);
 
-    let sql2 = `
+        let sql2 = `
       INSERT INTO user (username, email, password)
       VALUES (?, ?, ?)
     `;
 
-    await pool.query(sql2, [username, email, hashedPassword]);
-   
-    res.redirect('/login');
-    
+        await pool.query(sql2, [username, email, hashedPassword]);
 
-  } catch (err) {
-    console.error(err);
-    res.send("Server error");
-  }
+        res.redirect('/login');
+
+
+    } catch (err) {
+        console.error(err);
+        res.send("Server error");
+    }
+
+
  
 });
 
@@ -150,30 +158,30 @@ app.get('/details', async(req, res) => {
 });
 
 app.get('/dashboard', isAuthenticated, async (req, res) => {
-  try {
+    try {
 
-    const [userRows] = await pool.query(
-      "SELECT username FROM user WHERE user_id = ?",
-      [req.session.userId]
-    );
+        const [userRows] = await pool.query(
+            "SELECT username FROM user WHERE user_id = ?",
+            [req.session.userId]
+        );
 
-    const [cars] = await pool.query(
-      `SELECT car_id, year, make, model, color
+        const [cars] = await pool.query(
+            `SELECT car_id, year, make, model, color
        FROM car
        WHERE user_id = ?
        ORDER BY car_id DESC`,
-      [req.session.userId]
-    );
+            [req.session.userId]
+        );
 
-    res.render('dashboard', {
-      username: userRows[0].username,
-      cars
-    });
+        res.render('dashboard', {
+            username: userRows[0].username,
+            cars
+        });
 
-  } catch (err) {
-    console.error(err);
-    res.send("Server error");
-  }
+    } catch (err) {
+        console.error(err);
+        res.send("Server error");
+    }
 });
 
 app.get("/debug/user/420/cars", async (req, res) => {
@@ -189,8 +197,8 @@ app.get("/debug/user/420/cars", async (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/'); //redirect to login page
+    req.session.destroy();
+    res.redirect('/'); //redirect to login page
 });
 
 //API Endpoints
@@ -250,7 +258,7 @@ app.get('/logout', (req, res) => {
   });
 
 
-  app.get('/vehicle/add', async (req, res) => {
+app.get('/vehicle/add', async (req, res) => {
     // Build a list of years (newest -> oldest)
     const currentYear = new Date().getFullYear();
     const startYear = 1970;
@@ -383,9 +391,8 @@ app.post('/vehicle/delete/:carId', async (req, res) => {
   }
 });
 
-
-app.get("/dbTest", async(req, res) => {
-   try {
+app.get("/dbTest", async (req, res) => {
+    try {
         const [rows] = await pool.query("SELECT CURDATE()");
         res.send(rows);
     } catch (err) {
@@ -394,6 +401,6 @@ app.get("/dbTest", async(req, res) => {
     }
 });//dbTest
 
-app.listen(3000, ()=>{
+app.listen(3000, () => {
     console.log("Express server running")
 })

@@ -2,11 +2,12 @@
 <html lang="en">
   <%- include("partials/head") %> <br>
   <body>
+    <%- include('partials/nav') %>
     <a href="/dashboard" id="backToDashboard">← Back to your garage</a>
-
     <h2 id="addVehicleTitle">Add a vehicle</h2>
 
     <form method="POST" action="/vehicle/add" id="saveVehicleForm">
+    
       
       <label for="year">Year</label>
       <select id="year" name="year" required>
