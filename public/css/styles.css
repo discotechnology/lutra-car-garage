@@ -1,20 +1,57 @@
 .site-title {
   font-size: 22px;
   font-weight: 700;
-   color: #1e3a8a;           
+  color: #1e3a8a;           
   margin: 0;
   line-height: 1.25;
-
   font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .site-title .brand-accent {
   color: #f97316;              
   font-weight: 700;
+  font-size: 25px;
 }
+
 body {
   font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #111827;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+form {
+   width: 420px;
+  margin-top: 32px;
+}
+
+#welcomeTitle,
+#welcomeSubtitle,
+#signupTitle,
+#signupSubtitle,
+form,
+#signupText {
+  max-width: 520px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+form {
+  margin-top: 20px;
 }
 
 
@@ -28,6 +65,7 @@ body {
   border-radius: 9999px;
   cursor: pointer;
 }
+
 #loginBtn:hover {
   background-color: #1e40af;
 }
@@ -42,7 +80,6 @@ body {
   color: #111827;
   margin: 0 0 6px 0;
   font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
 }
 
 #welcomeSubtitle {
@@ -50,6 +87,7 @@ body {
   color: #6b7280;
   margin-bottom: 24px;
 }
+
 label {
   font-size: 14px;
   font-weight: 500;
@@ -70,8 +108,9 @@ label {
 #signupLink:hover {
   text-decoration: underline;
 }
+
 #siteFooter {
-  margin-top: 48px;
+  margin-top: auto;
   padding-bottom: 16px;
 
   text-align: center;
@@ -130,12 +169,14 @@ hr {
 }
 
 #backToLogin {
-  padding: 8px 14px;
+  padding: 10px 22px;   
   background-color: #e5e7eb;
   color: #111827;
   border-radius: 9999px;
   text-decoration: none;
   font-size: 14px;
+  font-weight: 600;       
+  display: inline-block;
 }
 
 #topLogin {
@@ -152,3 +193,9 @@ hr {
 }
 
 
+.car-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}

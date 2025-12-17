@@ -67,10 +67,7 @@ app.post('/login', async (req, res) => {
             return res.send("Incorrect username or password.");
         }
 
-        req.session.authenticated = true;
-        req.session.userId = rows[0].user_id;
-
-        res.redirect('/dashboard'); //feel free to rename this route 
+    res.redirect('/dashboard'); 
 
 
 
@@ -78,8 +75,6 @@ app.post('/login', async (req, res) => {
         console.error(err);
         res.send("Server error");
     }
-
-
 
 });
 
@@ -120,7 +115,40 @@ app.post("/signup", async (req, res) => {
         res.send("Server error");
     }
 
+  } catch (err) {
+    console.error(err);
+    res.send("Server error");
+  }
+ 
+});
 
+app.get('/details', async(req, res) => {
+    let car_id = req.query.car_id;
+    const REPAIR_CATEGORIES = [
+      "Engine",
+      "Transmission",
+      "Brakes",
+      "Suspension",
+      "Steering",
+      "Electrical",
+      "HVAC",
+      "Tires",
+      "Fluids / Filters",
+      "Body / Exterior",
+      "Interior",
+      "Scheduled Maintenance",
+      "Other"
+    ];
+
+    let car_query = `SELECT * FROM car WHERE car_id = ?`;
+    let params = [car_id];
+    let [car] = await pool.query(car_query, params);
+
+    let repairs_query = `SELECT * FROM repairs 
+                        WHERE car_id = ?
+                        ORDER BY date DESC`;
+    let [repairs] = await pool.query(repairs_query, params);
+    res.render('details', {car: car, repairs: repairs, categories: REPAIR_CATEGORIES});
 });
 
 app.get('/dashboard', isAuthenticated, async (req, res) => {
@@ -150,6 +178,17 @@ app.get('/dashboard', isAuthenticated, async (req, res) => {
     }
 });
 
+app.get("/debug/user/420/cars", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT car_id, year, make, model, color FROM car WHERE user_id = 420"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.send("DB error");
+  }
+});
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
