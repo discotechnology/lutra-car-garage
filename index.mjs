@@ -201,6 +201,63 @@ app.get('/logout', (req, res) => {
     res.redirect('/'); //redirect to login page
 });
 
+//API Endpoints
+
+  //Get car details by car_id
+  app.get('/api/car/details', async(req, res) => {
+      let car_id = req.query.car_id;
+      let car_query = `SELECT * FROM car WHERE car_id = ?`;
+      let params = [car_id];
+      let [car] = await pool.query(car_query, params);
+      res.send(car);
+  });
+
+  //Edit car details
+  app.post('/api/car/edit', async function(req, res) {
+      let car_id = req.body.car_id;
+      let make = req.body.make;
+      let model = req.body.model;
+      let year = req.body.year;
+      let color = req.body.color;
+      let pur_date = req.body.pur_date;
+      let plate_no = req.body.plate_no;
+
+      let update_query = `UPDATE car 
+                          SET make = ?, model = ?, year = ?, color = ?, pur_date = ?, plate_no = ?
+                          WHERE car_id = ?`;
+      let params = [make, model, year, color, pur_date, plate_no, car_id];
+      await pool.query(update_query, params);
+      res.redirect('/details?car_id=' + car_id);
+  });
+
+  //Add repair record
+  app.post('/api/repair/add', async function(req, res) {
+      let car_id = req.body.car_id;
+      let description = req.body.description;
+      let category = req.body.category;
+      let date = req.body.date;
+      let mileage = req.body.mileage;
+      let shop = req.body.shop;
+
+      let insert_query = `INSERT INTO repairs (car_id, description, category, date, mileage, shop)
+                          VALUES (?, ?, ?, ?, ?, ?)`;
+      let params = [car_id, description, category, date, mileage, shop];
+      await pool.query(insert_query, params);
+      res.redirect('/details?car_id=' + car_id);
+  });
+
+  //Delete repair record
+  app.post('/api/repair/delete', async function(req, res) {
+      let car_id = req.body.car_id;
+      let repair_id = req.body.repair_id;
+
+      let delete_query = `DELETE FROM repairs WHERE repair_id = ?`;
+      let params = [repair_id];
+      await pool.query(delete_query, params);
+      res.redirect('/details?car_id=' + car_id);
+  });
+
+
 app.get('/vehicle/add', async (req, res) => {
     // Build a list of years (newest -> oldest)
     const currentYear = new Date().getFullYear();
