@@ -249,6 +249,140 @@ app.get('/logout', (req, res) => {
   });
 
 
+  app.get('/vehicle/add', async (req, res) => {
+    // Build a list of years (newest -> oldest)
+    const currentYear = new Date().getFullYear();
+    const startYear = 1970;
+    const years = [];
+    const carColors = [
+        "Black",
+        "Blue",
+        "Gray",
+        "Green",
+        "Red",
+        "Silver",
+        "White",
+    ];
+
+    for (let y = currentYear; y >= startYear; y--) {
+        years.push(y);
+    }
+
+    res.render('addCar', {
+        years,
+        carColors
+    });
+});
+
+app.post('/vehicle/add', async (req, res) => {
+    try {
+        const { year, make, model, colorSelect, colorOther } = req.body;
+
+        const color =
+            colorSelect === "other" ? colorOther : colorSelect;
+
+        const userId = req.session.userId;
+
+        await pool.query(
+            `INSERT INTO car (user_id, make, model, year, color)
+       VALUES (?, ?, ?, ?, ?)`,
+            [userId, make, model, year, color]
+        );
+
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.error('Error adding car:', err);
+        res.status(500).send('Error adding car');
+    }
+});
+
+app.get('/vehicle/edit/:carId', async (req, res) => {
+    try {
+        const carId = req.params.carId;
+        const userId = req.session.userId;
+
+        const [rows] = await pool.query(
+            `SELECT car_id, user_id, make, model, year, color
+       FROM car
+       WHERE car_id = ? AND user_id = ?`,
+            [carId, userId]
+        );
+
+        if (!rows.length) {
+            return res.status(404).send('Car not found');
+        }
+
+        const car = rows[0];
+
+        const currentYear = new Date().getFullYear();
+        const startYear = 1970;
+        const years = [];
+        const carColors = [
+            "Black",
+            "Blue",
+            "Gray",
+            "Green",
+            "Red",
+            "Silver",
+            "White",
+        ];
+
+        for (let y = currentYear; y >= startYear; y--) {
+            years.push(y);
+        }
+
+        res.render('editCar', {
+            car,
+            years,
+            carColors,
+        });
+    } catch (err) {
+        console.error('Error loading car for edit:', err);
+        res.status(500).send('Error loading car');
+    }
+});
+
+app.post('/vehicle/edit/:carId', async (req, res) => {
+    try {
+        const carId = req.params.carId;
+        const userId = req.session.userId;
+
+        const { year, make, model, colorSelect, colorOther } = req.body;
+        const color = colorSelect === 'other' ? colorOther : colorSelect;
+
+        await pool.query(
+            `UPDATE car
+       SET make = ?, model = ?, year = ?, color = ?
+       WHERE car_id = ? AND user_id = ?`,
+            [make, model, year, color, carId, userId]
+        );
+
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.error('Error updating car:', err);
+        res.status(500).send('Error updating car');
+    }
+});
+
+app.post('/vehicle/delete/:carId', async (req, res) => {
+  try {
+    const carId = req.params.carId;
+    const userId = req.session.userId;
+
+    await pool.query(
+      `DELETE FROM car
+       WHERE car_id = ? AND user_id = ?`,
+      [carId, userId]
+    );
+
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error("Error deleting car:", err);
+    res.status(500).send("Error deleting car");
+  }
+});
+
+
 app.get("/dbTest", async(req, res) => {
    try {
         const [rows] = await pool.query("SELECT CURDATE()");
