@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %> <br>
+  <body>
+    <a href="/dashboard" id="backToDashboard">← Back to your garage</a>
+
+    <h2 id="addVehicleTitle">Add a vehicle</h2>
+
+    <form method="POST" action="/vehicle/add" id="saveVehicleForm">
+      
+      <label for="year">Year</label>
+      <select id="year" name="year" required>
+        <option value="">Select year</option>
+        <% years.forEach(function(y) { %>
+          <option value="<%= y %>"><%= y %></option>
+        <% }) %>
+      </select>
+
+      <label for="make">Make</label>
+      <select id="make" name="make" required>
+        <option value="">Select make</option>
+      </select>
+
+      <label for="model">Model</label>
+      <select id="model" name="model" required>
+        <option value="">Select model</option>
+      </select>
+
+      <label>Color</label>
+      <div id="colorOptions">
+        <% carColors.forEach(function(color) { %>
+          <label class="colorOption">
+            <input type="radio" name="colorSelect" value="<%= color %>">
+            <%= color %>
+          </label>
+        <% }) %>
+
+        <label class="colorOption">
+          <input type="radio" name="colorSelect" value="other" id="colorOtherRadio">
+          Other
+        </label>
+
+        <input 
+          type="text" 
+          id="colorOtherInput" 
+          name="colorOther"
+          placeholder="Enter custom color"
+          style="display:none; margin-top:5px;"
+        />
+      </div>
+
+      <br>
+      <button type="submit">Save to my garage</button>
+    </form>
+
+    <script>
+      const yearSelect = document.getElementById('year');
+      const makeSelect = document.getElementById('make');
+      const modelSelect = document.getElementById('model');
+      const colorOtherRadio = document.getElementById('colorOtherRadio');
+      const colorOtherInput = document.getElementById('colorOtherInput');
+      const colorRadios = document.querySelectorAll('input[name="colorSelect"]');
+
+      colorRadios.forEach(radio => {
+        radio.addEventListener("change", () => {
+          if (radio.value === "other") {
+            colorOtherInput.style.display = "block";
+            colorOtherInput.required = true;
+          } else {
+            colorOtherInput.style.display = "none";
+            colorOtherInput.required = false;
+            colorOtherInput.value = "";
+          }
+        });
+      });
+
+      async function loadMakes() {
+        const res = await fetch(
+          "https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"
+        );
+        const data = await res.json();
+        const makes = data.Results || [];
+
+        makes.sort((a, b) => a.MakeName.localeCompare(b.MakeName));
+        makeSelect.innerHTML = '<option value="">Select make</option>';
+
+        makes.forEach(item => {
+          const opt = document.createElement("option");
+          opt.value = item.MakeName;
+          opt.textContent = item.MakeName;
+          makeSelect.appendChild(opt);
+        });
+      }
+
+      async function loadModels(make, year) {
+        const res = await fetch(
+          `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${encodeURIComponent(year)}?format=json`
+        );
+        const data = await res.json();
+        const models = data.Results || [];
+
+        models.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name));
+        modelSelect.innerHTML = '<option value="">Select model</option>';
+
+        models.forEach(item => {
+          const opt = document.createElement("option");
+          opt.value = item.Model_Name;
+          opt.textContent = item.Model_Name;
+          modelSelect.appendChild(opt);
+        });
+      }
+
+      loadMakes();
+
+      yearSelect.addEventListener("change", () => {
+        if (yearSelect.value && makeSelect.value) {
+          loadModels(makeSelect.value, yearSelect.value);
+        }
+      });
+
+      makeSelect.addEventListener("change", () => {
+        if (yearSelect.value && makeSelect.value) {
+          loadModels(makeSelect.value, yearSelect.value);
+        }
+      });
+    </script>
+
+    <%- include("partials/footer.ejs") %>
+  </body>
+</html>
