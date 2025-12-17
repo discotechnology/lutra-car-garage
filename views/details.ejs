@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head') %> <br>
-
+<%- include('partials/nav') %>
     <body class="bg-light">
-    <%- include('partials/nav') %>
         <div id="details-wrapper">
 
             <div id="carDetails">
@@ -85,7 +84,10 @@
                             Year: <input type="number" name="year" value="<%=car[0].year%>"><br>
                             Color: <input type="text" name="color" value="<%=car[0].color%>"><br>
                             Purchase Date: <input type="date" name="pur_date"
-                                value="<%=car[0].pur_date.toISOString().substring(0,10)%>"><br>
+                                value="<% if (car[0].pur_date == null) { %><%=car[0].pur_date%>
+                                    <% } else { %>
+                                    <%=car[0].pur_date.toISOString().substring(0,10)%>
+                                    <% } %>""><br>
                             License Plate No.: <input type="text" name="plate_no" value="<%=car[0].plate_no%>"><br>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </form>
