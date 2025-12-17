@@ -1,16 +1,18 @@
 .site-title {
-  font-size: 22px;
+  font-size: 35px;
   font-weight: 700;
   color: #1e3a8a;           
   margin: 0;
   line-height: 1.25;
   font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin-bottom: 28px;
+  border-bottom: 1px transparent;
 }
 
 .site-title .brand-accent {
   color: #f97316;              
   font-weight: 700;
-  font-size: 25px;
+  font-size: 35px;
 }
 
 body {
