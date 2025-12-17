@@ -20,7 +20,7 @@
                 <%= car[0].color %>
             </p>
             <button id="editDetails" class="btn btn-primary">Edit Details</button>
-            <form action="/vehicle/delete/<%= car.car_id %>/" method="POST"
+            <form action="/vehicle/delete/<%= car[0].car_id %>/" method="POST"
                 onsubmit="return confirm('Delete this vehicle?');">
                 <button class="btn btn-danger" type="submit">Delete</button>
             </form>
