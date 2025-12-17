@@ -208,3 +208,23 @@ hr {
   font-size: 14px;
   margin-top: 8px;
 }
+
+#logoutbtn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #6b7280;       
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#logoutbtn:hover {
+  color: #111827;        
+  text-decoration: underline;
+}
+#logoutNav{
+  position: absolute;
+  top: 20px;
+  right: 32px;
+}
