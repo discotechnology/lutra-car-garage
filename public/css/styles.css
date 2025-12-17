@@ -199,3 +199,10 @@ hr {
   background-color: #fff;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
 }
+
+#loginError,
+#signupError {
+  color: #dc2626;   
+  font-size: 14px;
+  margin-top: 8px;
+}
