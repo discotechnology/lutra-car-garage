@@ -285,7 +285,7 @@ app.get('/vehicle/add', async (req, res) => {
 
 app.post('/vehicle/add', async (req, res) => {
     try {
-        const { year, make, model, colorSelect, colorOther } = req.body;
+        const { year, make, model, colorSelect, colorOther, pur_date, plate_no } = req.body;
 
         const color =
             colorSelect === "other" ? colorOther : colorSelect;
@@ -293,9 +293,9 @@ app.post('/vehicle/add', async (req, res) => {
         const userId = req.session.userId;
 
         await pool.query(
-            `INSERT INTO car (user_id, make, model, year, color)
-       VALUES (?, ?, ?, ?, ?)`,
-            [userId, make, model, year, color]
+            `INSERT INTO car (user_id, make, model, year, color, pur_date, plate_no)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [userId, make, model, year, color, pur_date, plate_no]
         );
 
         res.redirect('/dashboard');

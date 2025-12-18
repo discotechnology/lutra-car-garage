@@ -8,7 +8,6 @@
 
     <form method="POST" action="/vehicle/add" id="saveVehicleForm">
     
-      
       <label for="year">Year</label>
       <select id="year" name="year" required>
         <option value="">Select year</option>
@@ -49,6 +48,23 @@
           style="display:none; margin-top:5px;"
         />
       </div>
+
+      <label for="pur_date">Purchase Date</label>
+      <input
+        type="date"
+        id="pur_date"
+        name="pur_date"
+        required
+      />
+
+      <label for="plate_no">Plate Number</label>
+      <input
+        type="text"
+        id="plate_no"
+        name="plate_no"
+        placeholder="Enter plate number"
+        required
+      />
 
       <br>
       <button id="SaveButton" type="submit">Save to my garage</button>
