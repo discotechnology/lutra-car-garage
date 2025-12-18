@@ -1,147 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include("partials/head") %> <br>
-  <%- include('partials/nav') %>
-  <body class="bg-light">
-    <a href="/dashboard" id="backToDashboard">← Back to your garage</a>
-    <h2 id="addVehicleTitle">Add a vehicle</h2>
+<%- include("partials/head") %> <br>
+    <%- include('partials/nav') %>
 
-    <form method="POST" action="/vehicle/add" id="saveVehicleForm">
-    
-      <label for="year">Year</label>
-      <select id="year" name="year" required>
-        <option value="">Select year</option>
-        <% years.forEach(function(y) { %>
-          <option value="<%= y %>"><%= y %></option>
-        <% }) %>
-      </select>
+        <body class="bg-light">
+            <div class="container py-4">
 
-      <label for="make">Make</label>
-      <select id="make" name="make" required>
-        <option value="">Select make</option>
-      </select>
+                <a href="/dashboard" class="text-decoration-none">&larr; Back to your garage</a>
+                <h2 class="mt-3 mb-4 text-center">Add a vehicle</h2>
 
-      <label for="model">Model</label>
-      <select id="model" name="model" required>
-        <option value="">Select model</option>
-      </select>
+                <form method="POST" action="/vehicle/add" id="saveVehicleForm" class="card p-4 shadow-sm">
 
-      <label>Color</label>
-      <div id="colorOptions">
-        <% carColors.forEach(function(color) { %>
-          <label class="colorOption">
-            <input type="radio" name="colorSelect" value="<%= color %>">
-            <%= color %>
-          </label>
-        <% }) %>
+                    <div class="mb-3">
+                        <label for="year" class="form-label">Year</label>
+                        <select id="year" name="year" class="form-select" required>
+                            <option value="">Select year</option>
+                            <% years.forEach(function(y) { %>
+                                <option value="<%= y %>">
+                                    <%= y %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
 
-        <label class="colorOption">
-          <input type="radio" name="colorSelect" value="other" id="colorOtherRadio">
-          Other
-        </label>
+                    <div class="mb-3">
+                        <label for="make" class="form-label">Make</label>
+                        <select id="make" name="make" class="form-select" required>
+                            <option value="">Select make</option>
+                        </select>
+                    </div>
 
-        <input 
-          type="text" 
-          id="colorOtherInput" 
-          name="colorOther"
-          placeholder="Enter custom color"
-          style="display:none; margin-top:5px;"
-        />
-      </div>
+                    <div class="mb-3">
+                        <label for="model" class="form-label">Model</label>
+                        <select id="model" name="model" class="form-select" required>
+                            <option value="">Select model</option>
+                        </select>
+                    </div>
 
-      <label for="pur_date">Purchase Date</label>
-      <input
-        type="date"
-        id="pur_date"
-        name="pur_date"
-        required
-      />
+                    <div class="mb-3">
+                        <label class="form-label">Color</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <% carColors.forEach(function(color, i) { %>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="colorSelect" value="<%= color %>"
+                                        id="color_<%= i %>">
+                                    <label class="form-check-label" for="color_<%= i %>">
+                                        <%= color %>
+                                    </label>
+                                </div>
+                                <% }) %>
 
-      <label for="plate_no">Plate Number</label>
-      <input
-        type="text"
-        id="plate_no"
-        name="plate_no"
-        placeholder="Enter plate number"
-        required
-      />
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="colorSelect" value="other"
+                                            id="color_other">
+                                        <label class="form-check-label" for="color_other">Other</label>
+                                    </div>
+                        </div>
 
-      <br>
-      <button id="SaveButton" type="submit">Save to my garage</button>
-    </form>
 
-    <script>
-      const yearSelect = document.getElementById('year');
-      const makeSelect = document.getElementById('make');
-      const modelSelect = document.getElementById('model');
-      const colorOtherRadio = document.getElementById('colorOtherRadio');
-      const colorOtherInput = document.getElementById('colorOtherInput');
-      const colorRadios = document.querySelectorAll('input[name="colorSelect"]');
+                        <input type="text" class="form-control mt-2" id="colorOtherInput" name="colorOther"
+                            placeholder="Enter custom color" style="display:none;" />
+                    </div>
 
-      colorRadios.forEach(radio => {
-        radio.addEventListener("change", () => {
-          if (radio.value === "other") {
-            colorOtherInput.style.display = "block";
-            colorOtherInput.required = true;
-          } else {
-            colorOtherInput.style.display = "none";
-            colorOtherInput.required = false;
-            colorOtherInput.value = "";
-          }
-        });
-      });
+                    <div class="mb-3">
+                        <label for="pur_date" class="form-label">Purchase Date</label>
+                        <input type="date" id="pur_date" name="pur_date" class="form-control" required>
+                    </div>
 
-      async function loadMakes() {
-        const res = await fetch(
-          "https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"
-        );
-        const data = await res.json();
-        const makes = data.Results || [];
+                    <div class="mb-3">
+                        <label for="plate_no" class="form-label">License Plate Number</label>
+                        <input type="text" id="plate_no" name="plate_no" class="form-control"
+                            placeholder="Enter plate number" required>
+                    </div>
 
-        makes.sort((a, b) => a.MakeName.localeCompare(b.MakeName));
-        makeSelect.innerHTML = '<option value="">Select make</option>';
+                    <button id="SaveButton" type="submit" class="btn btn-primary w-100">Save to my garage</button>
 
-        makes.forEach(item => {
-          const opt = document.createElement("option");
-          opt.value = item.MakeName;
-          opt.textContent = item.MakeName;
-          makeSelect.appendChild(opt);
-        });
-      }
+                </form>
+            </div>
 
-      async function loadModels(make, year) {
-        const res = await fetch(
-          `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${encodeURIComponent(year)}?format=json`
-        );
-        const data = await res.json();
-        const models = data.Results || [];
+            <script>
+                const yearSelect = document.getElementById('year');
+                const makeSelect = document.getElementById('make');
+                const modelSelect = document.getElementById('model');
+                const colorOtherRadio = document.getElementById('colorOtherRadio');
+                const colorOtherInput = document.getElementById('colorOtherInput');
+                const colorRadios = document.querySelectorAll('input[name="colorSelect"]');
 
-        models.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name));
-        modelSelect.innerHTML = '<option value="">Select model</option>';
+                colorRadios.forEach(radio => {
+                    radio.addEventListener("change", () => {
+                        if (radio.value === "other") {
+                            colorOtherInput.style.display = "block";
+                            colorOtherInput.required = true;
+                        } else {
+                            colorOtherInput.style.display = "none";
+                            colorOtherInput.required = false;
+                            colorOtherInput.value = "";
+                        }
+                    });
+                });
 
-        models.forEach(item => {
-          const opt = document.createElement("option");
-          opt.value = item.Model_Name;
-          opt.textContent = item.Model_Name;
-          modelSelect.appendChild(opt);
-        });
-      }
+                async function loadMakes() {
+                    const res = await fetch(
+                        "https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"
+                    );
+                    const data = await res.json();
+                    const makes = data.Results || [];
 
-      loadMakes();
+                    makes.sort((a, b) => a.MakeName.localeCompare(b.MakeName));
+                    makeSelect.innerHTML = '<option value="">Select make</option>';
 
-      yearSelect.addEventListener("change", () => {
-        if (yearSelect.value && makeSelect.value) {
-          loadModels(makeSelect.value, yearSelect.value);
-        }
-      });
+                    makes.forEach(item => {
+                        const opt = document.createElement("option");
+                        opt.value = item.MakeName;
+                        opt.textContent = item.MakeName;
+                        makeSelect.appendChild(opt);
+                    });
+                }
 
-      makeSelect.addEventListener("change", () => {
-        if (yearSelect.value && makeSelect.value) {
-          loadModels(makeSelect.value, yearSelect.value);
-        }
-      });
-    </script>
+                async function loadModels(make, year) {
+                    const res = await fetch(
+                        `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${encodeURIComponent(year)}?format=json`
+                    );
+                    const data = await res.json();
+                    const models = data.Results || [];
 
-    <%- include("partials/footer.ejs") %>
-  </body>
+                    models.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name));
+                    modelSelect.innerHTML = '<option value="">Select model</option>';
+
+                    models.forEach(item => {
+                        const opt = document.createElement("option");
+                        opt.value = item.Model_Name;
+                        opt.textContent = item.Model_Name;
+                        modelSelect.appendChild(opt);
+                    });
+                }
+
+                loadMakes();
+
+                yearSelect.addEventListener("change", () => {
+                    if (yearSelect.value && makeSelect.value) {
+                        loadModels(makeSelect.value, yearSelect.value);
+                    }
+                });
+
+                makeSelect.addEventListener("change", () => {
+                    if (yearSelect.value && makeSelect.value) {
+                        loadModels(makeSelect.value, yearSelect.value);
+                    }
+                });
+            </script>
+
+            <%- include("partials/footer.ejs") %>
+        </body>
+
 </html>
